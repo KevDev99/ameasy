@@ -1,0 +1,49 @@
+{
+  "name": "ameasy",
+  "version": "1.0.0",
+  "description": "Appointment Management System",
+  "main": "server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "server": "nodemon backend/server.js",
+    "client": "npm start --prefix frontend",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KevDev99/ameasy.git"
+  },
+  "keywords": [
+    "appointment",
+    "management",
+    "system",
+    "calendar"
+  ],
+  "author": "Kevin Taufer",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/KevDev99/ameasy/issues"
+  },
+  "homepage": "https://github.com/KevDev99/ameasy#readme",
+  "dependencies": {
+    "@fullcalendar/daygrid": "^5.11.0",
+    "@fullcalendar/react": "^5.11.0",
+    "@mui/lab": "^5.0.0-alpha.77",
+    "@mui/x-date-pickers": "^5.0.0-alpha.0",
+    "axios": "^0.26.1",
+    "bcryptjs": "^2.4.3",
+    "colors": "^1.4.0",
+    "concurrently": "^7.1.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "express-async-handler": "^1.2.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.2.10",
+    "react-date-picker": "^8.4.0",
+    "react-toastify": "^8.2.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
