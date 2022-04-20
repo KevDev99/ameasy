@@ -5,6 +5,8 @@ const dotenv = require("dotenv").config();
 const cors = require("cors");
 const { errorHandler } = require("./middleware/errorMiddleware");
 const cron = require("node-cron");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 const connectDB = require("./config/db");
 const { sendEmail } = require("./email");

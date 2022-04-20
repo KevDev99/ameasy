@@ -47,7 +47,6 @@ const generateToken = (id) => {
 };
 
 module.exports = {
- 
   loginUser,
   getMe,
 };
