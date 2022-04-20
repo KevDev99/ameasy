@@ -2,23 +2,22 @@ import React from "react";
 import FullCalendar from "@fullcalendar/react"; // must go before plugins
 import dayGridPlugin from "@fullcalendar/daygrid"; // a plugin!
 import { useDispatch,useSelector } from "react-redux";
+import { setAppointment, reset } from "../features/appointment/appointmentSlice";
+
 
 /** Custom components */
+import AddAppointmentModal from "./AddAppointmentModal";
 import AppointmentModal from "./AppointmentModal";
 
 import { useEffect } from 'react';
 import { fetchAppointments } from '../features/appointment/appointmentSlice';
 
-
 export const Calendar = () => {
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-
+  const [openAddModal, setOpenAddModal] = React.useState(false);
+  const [openDetailModal, setOpenDetailModal] = React.useState(false);
   const dispatch = useDispatch();
 
-
-  const { appointments, isLoading, isSuccess, isError, message } = useSelector(
+  const { appointments, isLoading, appointment } = useSelector(
     (state) => state.appointment
   );
 
@@ -27,11 +26,10 @@ export const Calendar = () => {
   }, []);
 
   const handleDateClick = (info) => {
-    alert("Event: " + info.event.title);
-  };
-
-  const handleNewAppointment = () => {
-    handleOpen();
+    const selectedAppointment = appointments.find(a => a._id == info.event.id)
+    dispatch(setAppointment(selectedAppointment));
+    
+    setOpenDetailModal(true);
   };
 
   if (isLoading) {
@@ -55,15 +53,23 @@ export const Calendar = () => {
         customButtons={{
           addAppointmentBtn: {
             text: "New",
-            click: handleNewAppointment,
+            click: () => setOpenAddModal(true),
           },
         }}
-        events={appointments}
+        events={appointments.map((a) => ({...a, id: a._id}))}
       />
-      <AppointmentModal
-        open={open}
-        handleClose={handleClose}
-        handleOpen={handleOpen}
+
+      {/** appointments.map transformation needed, _id is not recognized by FullCalendar */}
+      
+      <AddAppointmentModal
+        open={openAddModal}
+        handleClose={() => setOpenAddModal(false)}
+        handleOpen={() => setOpenAddModal(true)}
+      />
+      <AppointmentModal 
+        open={openDetailModal}
+        handleClose={() => setOpenDetailModal(false)}
+        handleOpen= {() => setOpenDetailModal(true)}
       />
     </>
   );

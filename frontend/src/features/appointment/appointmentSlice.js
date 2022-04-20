@@ -3,6 +3,7 @@ import appointmentService from "./appointmentService";
 
 
 const initialState = {
+  appointment: null,
   appointments: [],
   isError: false,
   isSuccess: false,
@@ -46,8 +47,11 @@ export const appointmentSlice = createSlice({
       state.isLoading = false;
       state.isError = false;
       state.isSuccess = false;
-      state.message = "";
+      state.appointment = null;
     },
+    setAppointment: (state, action) => {
+      state.appointment =  action.payload;
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -57,7 +61,7 @@ export const appointmentSlice = createSlice({
       .addCase(createAppointment.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.appointment = action.payload;
+        state.appointments.push(action.payload);
       })
       .addCase(createAppointment.rejected, (state, action) => {
         state.isLoading = false;
@@ -82,5 +86,5 @@ export const appointmentSlice = createSlice({
   },
 });
 
-export const { reset } = appointmentSlice.actions;
+export const { reset, setAppointment } = appointmentSlice.actions;
 export default appointmentSlice.reducer;

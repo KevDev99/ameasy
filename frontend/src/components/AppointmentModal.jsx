@@ -1,21 +1,9 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import TextField from "@mui/material/TextField";
-
-import Button from "@mui/material/Button";
-
-import { useDispatch } from "react-redux";
-
-import DatePicker from "react-date-picker";
-import TimePicker from "react-time-picker";
-
-import {
-  createAppointment,
-  fetchAppointments,
-} from "../features/appointment/appointmentSlice";
 
 const style = {
   position: "absolute",
@@ -28,31 +16,15 @@ const style = {
   p: 4,
 };
 
-export const AppointmentModal = ({ open, handleClose, handleOpen }) => {
-  const [startDate, setStartDate] = useState(new Date());
-  const [startTime, setStartTime] = useState("10:00");
+export const AppointmentModal = ({  handleClose, open }) => {
 
-  const [endDate, setEndDate] = useState(new Date());
-  const [endTime, setEndTime] = useState("10:00");
+  const { appointment } = useSelector(
+    (state) => state.appointment
+  );
 
-  const dispatch = useDispatch();
+  if(!appointment) return <p></p>
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    const data = new FormData(e.currentTarget);
-    const title = data.get("title");
-
-    const appointmentData = {
-      start: startDate.toJSON(),
-      end: endDate.toJSON(),
-      title,
-    };
-
-    dispatch(createAppointment(appointmentData));
-    dispatch(fetchAppointments());
-    handleClose();
-  };
+  console.log(appointment);
 
   return (
     <Modal
@@ -62,67 +34,17 @@ export const AppointmentModal = ({ open, handleClose, handleOpen }) => {
       aria-describedby="modal-modal-description"
     >
       <Box sx={style}>
-        <Typography id="modal-modal-title" variant="h6" component="h2">
-          Add Appointment
+        <Typography sx={{borderBottom: '1px solid black'}} id="modal-modal-title" variant="h6" component="h2">
+          {appointment.title}
         </Typography>
 
-        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="title"
-            label="Title"
-            name="title"
-            autoComplete="title"
-            autoFocus
-          />
+        <Typography sx={{mt: 2}}>
+          Start: {`${new Date(appointment.start).toLocaleDateString()} ${new Date(appointment.start).toLocaleTimeString()}`}
+        </Typography>
 
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Typography sx={{ mr: 2 }}>Start</Typography>
-            <DatePicker
-              className={"form-control"}
-              minDate={new Date()}
-              clearIcon={false}
-              onChange={setStartDate}
-              value={startDate}
-            />
-            <TimePicker
-              className={"form-control"}
-              onChange={setStartTime}
-              clearIcon={false}
-              value={startTime}
-            />
-          </Box>
-
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Typography sx={{ mr: 3 }}>End</Typography>
-            <DatePicker
-              className={"form-control"}
-              minDate={startDate}
-              clearIcon={false}
-              onChange={setEndDate}
-              value={endDate}
-            />
-
-            <TimePicker
-              className={"form-control"}
-              onChange={setEndTime}
-              clearIcon={false}
-              value={endTime}
-            />
-          </Box>
-
-          <Button
-            type="submit"
-            color="success"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-          >
-            Submit
-          </Button>
-        </Box>
+        <Typography sx={{mt: 2}}>
+          End: {`${new Date(appointment.end).toLocaleDateString()} ${new Date(appointment.end).toLocaleTimeString()}`}
+        </Typography>
       </Box>
     </Modal>
   );

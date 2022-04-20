@@ -12,6 +12,7 @@ const createAppointment = async (appointmentData, token) => {
 
   const response = await axios.post('http://localhost:5000' + API_URL, appointmentData, config);
 
+
   return response.data;
 }
 
@@ -24,7 +25,6 @@ const fetchAppointments = async (token) => {
   };
 
   const response = await axios.get('http://localhost:5000' + API_URL, config);
-
   return response.data;
 }
 
