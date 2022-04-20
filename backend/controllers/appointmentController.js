@@ -1,6 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const User = require("../models/userModel");
-const Appointment = require('../models/appointmentModel');
+const Appointment = require("../models/appointmentModel");
 
 // @desc Create new appointment
 // @route POST /api/appointments
@@ -44,7 +44,7 @@ const getAppointmentsPerUser = asyncHandler(async (req, res) => {
     throw new Error("User not found!");
   }
 
-  const appointments = await Appointment.find({ user: req.user.id })
+  const appointments = await Appointment.find({ user: req.user.id });
 
   res.status(200).json(appointments);
 });
@@ -55,8 +55,6 @@ const getAppointmentsPerUser = asyncHandler(async (req, res) => {
 const updateAppointment = asyncHandler(async (req, res) => {
   // Get user using the id in the JWT
   const user = await User.findById(req.user.id);
-
-
 
   if (!user) {
     res.status(401);
@@ -75,7 +73,6 @@ const updateAppointment = asyncHandler(async (req, res) => {
     throw new Error("Not Authorized");
   }
 
-
   const updatedAppointment = await Appointment.findByIdAndUpdate(
     req.params.id,
     req.body
@@ -84,10 +81,37 @@ const updateAppointment = asyncHandler(async (req, res) => {
   res.status(200).json(updatedAppointment);
 });
 
+const getReminders = asyncHandler(async () => {
+  const appointments = await Appointment.find({ status: "open" });
 
+  const reminderDate = new Date();
+  reminderDate.setMinutes(reminderDate.getMinutes() + 15);
+
+  const filteredAppointments = appointments.filter(
+    (a) => new Date(a.start) > new Date() && reminderDate >= new Date(a.start)
+  );
+
+
+  const reminderList = filteredAppointments.map(async (fa) => {
+    const user = await User.findOne(fa.user);
+    const email = user.email;
+
+    const reminder = {
+      from: process.env.EMAIL_SERVICE_USER,
+      to: email,
+      subject: fa.title,
+      text: `Start: ${fa.start} End: ${fa.end}`,
+    };
+
+    return reminder;
+  });
+
+  return await Promise.all(reminderList);
+});
 
 module.exports = {
   createAppointment,
   getAppointmentsPerUser,
-  updateAppointment
+  updateAppointment,
+  getReminders,
 };
