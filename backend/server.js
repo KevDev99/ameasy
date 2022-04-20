@@ -1,3 +1,4 @@
+const path = require("path");
 const express = require("express");
 const colors = require("colors");
 const dotenv = require("dotenv").config();
@@ -25,10 +26,6 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.get("/", (req, res) => {
-  res.send("AM Easy Backend");
-});
-
 // Routes
 app.use("/api/users", require("./routes/userRoutes"));
 app.use("/api/appointments", require("./routes/appointmentRoutes"));
@@ -44,5 +41,17 @@ cron.schedule(
     reminderList.map((reminder) => sendEmail(reminder));
   }
 );
+
+if (process.env.NODE_ENV === "production") {
+  // set build folder as static
+  app.use(express.static(path.join(__dirname, "../frontend/build")));
+  app.get("*", (req, res) =>
+    res.sendFile(__dirname, "../", "frontend", "build", "index.html")
+  );
+} else {
+  app.get("/", (req, res) => {
+    res.status(200).json({message: "AM Easy Backend API"});
+  });
+}
 
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
