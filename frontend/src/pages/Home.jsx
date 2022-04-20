@@ -11,20 +11,12 @@ import { useDispatch, useSelector } from "react-redux"
 /**Custom components */
 import { Calendar } from '../components/Calendar';
 import Spinner from '../components/Spinner';
-import { useEffect } from 'react';
-import { fetchAppointments } from '../features/appointment/appointmentSlice';
 
 const Home = () => {
 
   const { user, isLoading, isSuccess, isError, message } = useSelector(
     (state) => state.auth
   );
-
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(fetchAppointments());
-  }, [dispatch])
 
 
   if (isLoading) {

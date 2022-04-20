@@ -58,9 +58,14 @@ code {
   border: 1px solid rgb(202, 201, 201);
   padding: .5rem;
   border-radius: 5px;
+  margin: .5rem;
 }
 
 .react-date-picker__wrapper {
+  border: none !important;
+}
+
+.react-time-picker__wrapper {
   border: none !important;
 }
 

@@ -1,35 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
-import Modal from '@mui/material/Modal';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import TextField from '@mui/material/TextField';
+import Modal from "@mui/material/Modal";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import TextField from "@mui/material/TextField";
 
-import Button from '@mui/material/Button';
+import Button from "@mui/material/Button";
 
-import { useDispatch } from "react-redux"
+import { useDispatch } from "react-redux";
 
+import DatePicker from "react-date-picker";
+import TimePicker from "react-time-picker";
 
-import DatePicker from 'react-date-picker';
-
-import { createAppointment, fetchAppointments } from '../features/appointment/appointmentSlice';
-
+import {
+  createAppointment,
+  fetchAppointments,
+} from "../features/appointment/appointmentSlice";
 
 const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
   width: 400,
-  bgcolor: 'background.paper',
+  bgcolor: "background.paper",
   boxShadow: 24,
   p: 4,
 };
 
 export const AppointmentModal = ({ open, handleClose, handleOpen }) => {
-
   const [startDate, setStartDate] = useState(new Date());
+  const [startTime, setStartTime] = useState("10:00");
+
   const [endDate, setEndDate] = useState(new Date());
+  const [endTime, setEndTime] = useState("10:00");
 
   const dispatch = useDispatch();
 
@@ -37,18 +41,18 @@ export const AppointmentModal = ({ open, handleClose, handleOpen }) => {
     e.preventDefault();
 
     const data = new FormData(e.currentTarget);
-    const title = data.get('title');
+    const title = data.get("title");
 
     const appointmentData = {
       start: startDate.toJSON(),
       end: endDate.toJSON(),
       title,
-    }
+    };
 
     dispatch(createAppointment(appointmentData));
     dispatch(fetchAppointments());
     handleClose();
-  }
+  };
 
   return (
     <Modal
@@ -74,10 +78,39 @@ export const AppointmentModal = ({ open, handleClose, handleOpen }) => {
             autoFocus
           />
 
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <DatePicker className={'form-control'} minDate={new Date()} clearIcon={false} onChange={setStartDate} value={startDate} />
-            -
-            <DatePicker className={'form-control'} minDate={startDate} clearIcon={false} onChange={setEndDate} value={endDate} />
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Typography sx={{ mr: 2 }}>Start</Typography>
+            <DatePicker
+              className={"form-control"}
+              minDate={new Date()}
+              clearIcon={false}
+              onChange={setStartDate}
+              value={startDate}
+            />
+            <TimePicker
+              className={"form-control"}
+              onChange={setStartTime}
+              clearIcon={false}
+              value={startTime}
+            />
+          </Box>
+
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Typography sx={{ mr: 3 }}>End</Typography>
+            <DatePicker
+              className={"form-control"}
+              minDate={startDate}
+              clearIcon={false}
+              onChange={setEndDate}
+              value={endDate}
+            />
+
+            <TimePicker
+              className={"form-control"}
+              onChange={setEndTime}
+              clearIcon={false}
+              value={endTime}
+            />
           </Box>
 
           <Button
@@ -89,11 +122,10 @@ export const AppointmentModal = ({ open, handleClose, handleOpen }) => {
           >
             Submit
           </Button>
-
         </Box>
       </Box>
-    </Modal >
-  )
-}
+    </Modal>
+  );
+};
 
 export default AppointmentModal;
