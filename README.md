@@ -3,7 +3,7 @@
 # Demo
 https://ameasy.herokuapp.com/
 
-### Credentials
+**Credentials** <br>
 User: demo-customer@business.com
 PW: demo-customer
 
