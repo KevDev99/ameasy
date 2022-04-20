@@ -32,7 +32,7 @@ export const AddAppointmentModal = ({ open, handleClose, handleOpen }) => {
   const [startTime, setStartTime] = useState("10:00");
 
   const [endDate, setEndDate] = useState(new Date());
-  const [endTime, setEndTime] = useState("10:00");
+  const [endTime, setEndTime] = useState("11:00");
 
   const dispatch = useDispatch();
 
@@ -53,6 +53,12 @@ export const AddAppointmentModal = ({ open, handleClose, handleOpen }) => {
     const title = data.get("title");
     const start = combineDateAndTime(startDate, startTime);
     const end = combineDateAndTime(endDate, endTime);
+
+    if(!title || title.trim() === "")
+      return alert("Please enter a valid title!")
+
+    if(end <= start) 
+      return alert('The end date cannot be behind or equal the start date!')
 
     const appointmentData = {
       start,

@@ -1,11 +1,12 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+
+import {updateAppointment} from '../features/appointment/appointmentSlice';
 
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import FormControl from '@mui/material/FormControl';
-import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import MenuItem from '@mui/material/MenuItem';
 
@@ -26,11 +27,20 @@ export const AppointmentModal = ({ handleClose, open }) => {
     (state) => state.appointment
   );
 
-  const [status, setStatus] = useState();
+  const dispatch = useDispatch();
 
   if (!appointment) return <p></p>
 
-  console.log(appointment);
+  const handleStatusChanged = (e) => {
+    e.preventDefault();
+
+    const modAppointment = {};
+    modAppointment._id = appointment._id;
+    modAppointment.status = e.target.value;
+    console.log(modAppointment);
+    dispatch(updateAppointment(modAppointment));
+    handleClose();
+  }
 
   return (
     <Modal
@@ -40,23 +50,23 @@ export const AppointmentModal = ({ handleClose, open }) => {
       aria-describedby="modal-modal-description"
     >
       <Box sx={style}>
-        <Box>
-          <Typography sx={{ borderBottom: '1px solid black' }} id="modal-modal-title" variant="h6" component="h2">
+        <Box sx={{ borderBottom: '1px solid black', display: "flex", justifyContent: 'space-between', alignItems: 'center' }}>
+          <Typography  id="modal-modal-title" variant="h6" component="h2">
             {appointment.title}
           </Typography>
-          <FormControl variant="filled" sx={{ m: 1, minWidth: 120 }}>
-            <InputLabel id="demo-simple-select-filled-label">Status</InputLabel>
+          <FormControl disabled={appointment.status === "closed"} variant="outlined" sx={{  width: 120,
+            mb: 1,
+            backgroundColor: 'white',
+             }}>
             <Select
+              sx={{height: 30,}}
               labelId="demo-simple-select-filled-label"
               id="demo-simple-select-filled"
-              value={status}
-              onChange={(e) => setStatus(e.target.value)}
+              value={appointment.status}
+              onChange={handleStatusChanged}
             >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              <MenuItem value={10}>Open</MenuItem>
-              <MenuItem value={20}>Closed</MenuItem>
+              <MenuItem value={'open'}>Open</MenuItem>
+              <MenuItem value={'closed'}>Closed</MenuItem>
             </Select>
           </FormControl>
         </Box>

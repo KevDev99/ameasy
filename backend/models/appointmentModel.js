@@ -17,7 +17,13 @@ const appointmentSchema = mongoose.Schema(
     title: {
       type: String,
       required: [true, "Please add a valid title"],
-    }
+    },
+    status: {
+      type: String,
+      required: false,
+      enum: ["open", "closed"],
+      default: false,
+    },
   },
   {
     timestamps: true,

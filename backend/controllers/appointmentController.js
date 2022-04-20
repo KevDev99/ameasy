@@ -49,9 +49,45 @@ const getAppointmentsPerUser = asyncHandler(async (req, res) => {
   res.status(200).json(appointments);
 });
 
+// @desc  update ticket
+// @route UPDATE /api/appointment/:id
+// @access Private
+const updateAppointment = asyncHandler(async (req, res) => {
+  // Get user using the id in the JWT
+  const user = await User.findById(req.user.id);
+
+
+
+  if (!user) {
+    res.status(401);
+    throw new Error("User not found!");
+  }
+
+  const appointment = await Appointment.findById(req.params.id);
+
+  if (!appointment) {
+    res.status(404);
+    throw new Error("Appointment not found");
+  }
+
+  if (appointment.user.toString() !== req.user.id && !user.isAdmin) {
+    res.status(401);
+    throw new Error("Not Authorized");
+  }
+
+
+  const updatedAppointment = await Appointment.findByIdAndUpdate(
+    req.params.id,
+    req.body
+  );
+
+  res.status(200).json(updatedAppointment);
+});
+
 
 
 module.exports = {
   createAppointment,
-  getAppointmentsPerUser
+  getAppointmentsPerUser,
+  updateAppointment
 };

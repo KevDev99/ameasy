@@ -2,7 +2,7 @@ import React from "react";
 import FullCalendar from "@fullcalendar/react"; // must go before plugins
 import dayGridPlugin from "@fullcalendar/daygrid"; // a plugin!
 import { useDispatch,useSelector } from "react-redux";
-import { setAppointment, reset } from "../features/appointment/appointmentSlice";
+import { setAppointment} from "../features/appointment/appointmentSlice";
 
 
 /** Custom components */
@@ -17,18 +17,17 @@ export const Calendar = () => {
   const [openDetailModal, setOpenDetailModal] = React.useState(false);
   const dispatch = useDispatch();
 
-  const { appointments, isLoading, appointment } = useSelector(
+  const { appointments, isLoading } = useSelector(
     (state) => state.appointment
   );
 
   useEffect(() => {
     dispatch(fetchAppointments());
-  }, []);
+  }, [dispatch]);
 
   const handleDateClick = (info) => {
-    const selectedAppointment = appointments.find(a => a._id == info.event.id)
+    const selectedAppointment = appointments.find(a => a._id === info.event.id)
     dispatch(setAppointment(selectedAppointment));
-    
     setOpenDetailModal(true);
   };
 
