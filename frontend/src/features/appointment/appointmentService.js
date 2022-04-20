@@ -10,11 +10,7 @@ const createAppointment = async (appointmentData, token) => {
     },
   };
 
-  const response = await axios.post(
-    "http://localhost:5000" + API_URL,
-    appointmentData,
-    config
-  );
+  const response = await axios.post(API_URL, appointmentData, config);
 
   return response.data;
 };
@@ -27,7 +23,7 @@ const fetchAppointments = async (token) => {
     },
   };
 
-  const response = await axios.get("http://localhost:5000" + API_URL, config);
+  const response = await axios.get(API_URL, config);
   return response.data;
 };
 
@@ -40,7 +36,7 @@ const updateAppointment = async (appointmentData, token) => {
   };
 
   const response = await axios.put(
-    "http://localhost:5000" + API_URL + `/${appointmentData._id}`,
+    API_URL + `/${appointmentData._id}`,
     appointmentData,
     config
   );
@@ -51,7 +47,7 @@ const updateAppointment = async (appointmentData, token) => {
 const appointmentService = {
   createAppointment,
   fetchAppointments,
-  updateAppointment
+  updateAppointment,
 };
 
 export default appointmentService;
