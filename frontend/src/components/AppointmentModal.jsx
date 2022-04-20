@@ -4,6 +4,10 @@ import { useSelector } from "react-redux";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import FormControl from '@mui/material/FormControl';
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
+import MenuItem from '@mui/material/MenuItem';
 
 const style = {
   position: "absolute",
@@ -16,13 +20,15 @@ const style = {
   p: 4,
 };
 
-export const AppointmentModal = ({  handleClose, open }) => {
+export const AppointmentModal = ({ handleClose, open }) => {
 
   const { appointment } = useSelector(
     (state) => state.appointment
   );
 
-  if(!appointment) return <p></p>
+  const [status, setStatus] = useState();
+
+  if (!appointment) return <p></p>
 
   console.log(appointment);
 
@@ -34,15 +40,32 @@ export const AppointmentModal = ({  handleClose, open }) => {
       aria-describedby="modal-modal-description"
     >
       <Box sx={style}>
-        <Typography sx={{borderBottom: '1px solid black'}} id="modal-modal-title" variant="h6" component="h2">
-          {appointment.title}
-        </Typography>
+        <Box>
+          <Typography sx={{ borderBottom: '1px solid black' }} id="modal-modal-title" variant="h6" component="h2">
+            {appointment.title}
+          </Typography>
+          <FormControl variant="filled" sx={{ m: 1, minWidth: 120 }}>
+            <InputLabel id="demo-simple-select-filled-label">Status</InputLabel>
+            <Select
+              labelId="demo-simple-select-filled-label"
+              id="demo-simple-select-filled"
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+            >
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              <MenuItem value={10}>Open</MenuItem>
+              <MenuItem value={20}>Closed</MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
 
-        <Typography sx={{mt: 2}}>
+        <Typography sx={{ mt: 2 }}>
           Start: {`${new Date(appointment.start).toLocaleDateString()} ${new Date(appointment.start).toLocaleTimeString()}`}
         </Typography>
 
-        <Typography sx={{mt: 2}}>
+        <Typography sx={{ mt: 2 }}>
           End: {`${new Date(appointment.end).toLocaleDateString()} ${new Date(appointment.end).toLocaleTimeString()}`}
         </Typography>
       </Box>
